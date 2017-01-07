@@ -1,8 +1,8 @@
 //
 //  NMNotificationManager.m
-//  Marike Jave
+//  Marke Jave
 //
-//  Created by Marike Jave on 15/10/15.
+//  Created by Marke Jave on 15/10/15.
 //  Copyright © 2015年 Marike Jave. All rights reserved.
 //
 
@@ -15,6 +15,7 @@
 NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationManagerDidReceiveNotification";
 
 @implementation NMDefaultNotification
+@synthesize aps = _aps, customContent = _customContent;
 
 - (id)initWithNotificationAps:(id<NMNotificationAps>)notificationAps customContent:(id<NMNotificationCustomContent>)customContent;{
     self = [super init];
@@ -72,7 +73,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
 
 - (void)dealloc{
     for (NMNotificationHandle *handle in [self handles]) {
-        [handle setRelationObject:nil];
+        handle.relationObject = nil;
         [handle _removeFromContainer];
     }
     [[self handles] removeAllObjects];
@@ -325,7 +326,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
                         if (!type) {
                             [onceHandles addObject:handle];
                         } else {
-                            [handle setType:type];
+                            handle.type = type;
                         }
                     }
                     hasPerformCount++;
@@ -386,7 +387,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     NSMutableArray *mutableNotificationHandles = [self mutableNotificationHandles];
     for (NMNotificationHandle *handle in mutableNotificationHandles) {
         if ([handle delgate] == delegate && ([handle type] & type) && ![handle always]) {
-            [handle setType:[handle type] & ~type];
+            handle.type = ([handle type] & ~type);
             if (![handle type]) {
                 [willRemoveHandles addObject:handle];
             }
@@ -400,7 +401,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     NSMutableArray *mutableNotificationHandles = [self mutableNotificationHandles];
     for (NMNotificationHandle  *handle in mutableNotificationHandles) {
         if (([handle type] & type) && ![handle always]) {
-            [handle setType:[handle type] & ~type];
+            handle.type = ([handle type] & ~type);
             if (![handle type]) {
                 [willRemoveHandles addObject:handle];
             }
@@ -432,7 +433,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     NSMutableArray *mutableNotificationHandles = [self mutableNotificationHandles];
     for (NMNotificationHandle *handle in mutableNotificationHandles) {
         if ([handle delgate] == delegate && ([handle type] & type) && (always || ![handle always])) {
-            [handle setType:[handle type] & ~type];
+            handle.type = ([handle type] & ~type);
             if (![handle type]) {
                 [willRemoveHandles addObject:handle];
             }
