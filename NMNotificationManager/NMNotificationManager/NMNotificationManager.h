@@ -27,7 +27,7 @@ extern NSString * const NMNotificationManagerDidReceiveNotification;
 
 @end
 
-@interface NMNotification : NSObject
+@protocol NMNotification <NSObject>
 
 @property(nonatomic, strong) id<NMNotificationAps> aps;
 @property(nonatomic, strong) id<NMNotificationCustomContent> customContent;
@@ -35,15 +35,19 @@ extern NSString * const NMNotificationManagerDidReceiveNotification;
 - (id)initWithNotificationAps:(id<NMNotificationAps>)notificationAps customContent:(id<NMNotificationCustomContent>)customContent;
 
 + (id)notificationWithNotificationAps:(id<NMNotificationAps>)notificationAps customContent:(id<NMNotificationCustomContent>)customContent;
+@end
+
+@interface NMDefaultNotification : NSObject<NMNotification>
 
 @end
 
+@class NMNotificationManager;
 
 @protocol NMNotificationHandleDelegate <NSObject>
 
 @optional
 
-- (BOOL)epDidHandleNoitification:(id<NMNotificationCustomContent>)notificationContent;
+- (BOOL)notificationManager:(NMNotificationManager *)notificationManager handleNoitification:(id<NMNotificationCustomContent>)notificationContent;
 
 @end
 
@@ -53,7 +57,7 @@ extern NSString * const NMNotificationManagerDidReceiveNotification;
 
 @property(nonatomic, assign, readonly) BOOL always;
 
-@property(nonatomic, copy  , readonly) void (^notificationHandle)(id<NMNotificationCustomContent>notificationContent);
+@property(nonatomic, copy  , readonly) void (^notificationHandle)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent>notificationContent);
 
 @property(nonatomic, assign, readonly) id<NMNotificationHandleDelegate> delgate;
 
@@ -68,13 +72,13 @@ extern NSString * const NMNotificationManagerDidReceiveNotification;
 
 + (id)shareManager;
 
-+ (void)handleNotification:(NMNotification *)notification backgroundFetch:(BOOL)backgroundFetch;
++ (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
++ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                       relationObject:(id)relationObject;
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
++ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                               always:(BOOL)always
                                       relationObject:(id)relationObject;

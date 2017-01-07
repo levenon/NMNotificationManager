@@ -14,7 +14,7 @@
 
 NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationManagerDidReceiveNotification";
 
-@implementation NMNotification
+@implementation NMDefaultNotification
 
 - (id)initWithNotificationAps:(id<NMNotificationAps>)notificationAps customContent:(id<NMNotificationCustomContent>)customContent;{
     self = [super init];
@@ -99,7 +99,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
 
 @property(nonatomic, assign) NSInteger type;
 
-@property(nonatomic, copy  ) void (^notificationHandle)(id<NMNotificationCustomContent> notificationContent);
+@property(nonatomic, copy  ) void (^notificationHandle)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent);
 
 @property(nonatomic, assign) id<NMNotificationHandleDelegate> delgate;
 
@@ -129,7 +129,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     return self;
 }
 
-- (id)initWithHandleBlock:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (id)initWithHandleBlock:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                      type:(NSInteger)type
                    always:(BOOL)always
                 container:(NMNotificationManager *)container
@@ -153,11 +153,11 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
 }
 
 - (BOOL)_performAction:(id<NMNotificationCustomContent>)notificationContent{
-    if ([self delgate] && [[self delgate] respondsToSelector:@selector(epDidHandleNoitification:)]) {
-        [[self delgate] epDidHandleNoitification:notificationContent];
+    if ([self delgate] && [[self delgate] respondsToSelector:@selector(notificationManager:handleNoitification:)]) {
+        [[self delgate] notificationManager:[self container] handleNoitification:notificationContent];
         return YES;
     } else if ([self notificationHandle]){
-        self.notificationHandle(notificationContent);
+        self.notificationHandle([self container], notificationContent);
         return YES;
     }
     return NO;
@@ -309,7 +309,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
 }
 
-- (void)_handleNotification:(NMNotification *)notification backgroundFetch:(BOOL)backgroundFetch;{
+- (void)_handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;{
     NSLog(@"LOG: Receive remote notificatons : %@", notification);
     id<NMNotificationCustomContent> customContent = [notification customContent];
     if (customContent && [customContent notificationContentType]) {
@@ -345,7 +345,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     }
 }
 
-- (NMNotificationHandle *)registerNotificationHandle:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                               always:(BOOL)always
                                       relationObject:(id)relationObject;{
@@ -466,11 +466,11 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
 
 #pragma mark - public
 
-+ (void)handleNotification:(NMNotification *)notification backgroundFetch:(BOOL)backgroundFetch;{
++ (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;{
     [[self shareManager] _handleNotification:notification backgroundFetch:backgroundFetch];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
++ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                       relationObject:(id)relationObject;{
     return [self registerNotificationHandle:notificationHandle
@@ -479,7 +479,7 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
                              relationObject:relationObject];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(id<NMNotificationCustomContent> notificationContent))notificationHandle
++ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                               always:(BOOL)always
                                       relationObject:(id)relationObject;{
