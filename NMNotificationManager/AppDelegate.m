@@ -11,6 +11,8 @@
 
 @interface AppDelegate ()
 
+@property (nonatomic, strong) NMNotificationManager *manager;
+
 @end
 
 @implementation AppDelegate
@@ -52,13 +54,13 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
     id<NMNotificationAps> aps = nil;
     id<NMNotificationCustomContent> customContent;
-    [NMNotificationManager handleNotification:[[NMDefaultNotification alloc] initWithNotificationAps:aps customContent:customContent] backgroundFetch:NO];
+    [[self manager] handleNotification:[[NMDefaultNotification alloc] initWithNotificationAps:aps customContent:customContent] backgroundFetch:NO];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler{
     id<NMNotificationAps> aps = nil;
     id<NMNotificationCustomContent> customContent;
-    [NMNotificationManager handleNotification:[[NMDefaultNotification alloc] initWithNotificationAps:aps customContent:customContent] backgroundFetch:YES];
+    [[self manager] handleNotification:[[NMDefaultNotification alloc] initWithNotificationAps:aps customContent:customContent] backgroundFetch:YES];
     
     completionHandler(UIBackgroundFetchResultNewData);
 }

@@ -346,10 +346,10 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     }
 }
 
-- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
-                                                type:(NSInteger)type
-                                              always:(BOOL)always
-                                      relationObject:(id)relationObject;{
+- (NMNotificationHandle *)_registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
+                                                 type:(NSInteger)type
+                                               always:(BOOL)always
+                                       relationObject:(id)relationObject;{
     NMNotificationHandle *handle = [[NMNotificationHandle alloc] initWithHandleBlock:notificationHandle
                                                                                 type:type
                                                                               always:always
@@ -360,10 +360,10 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
     return handle;
 }
 
-- (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
-                                                        type:(NSInteger)type
-                                                      always:(BOOL)always
-                                              relationObject:(id)relationObject;{
+- (NMNotificationHandle *)_registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
+                                                         type:(NSInteger)type
+                                                       always:(BOOL)always
+                                               relationObject:(id)relationObject;{
     NMNotificationHandle *handle = [self _handleWithDelegate:delegate];
     if (!handle) {
         NMNotificationHandle *handle = [[NMNotificationHandle alloc] initWithDelegate:delegate
@@ -467,11 +467,11 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
 
 #pragma mark - public
 
-+ (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;{
-    [[self shareManager] _handleNotification:notification backgroundFetch:backgroundFetch];
+- (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;{
+    [self _handleNotification:notification backgroundFetch:backgroundFetch];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                       relationObject:(id)relationObject;{
     return [self registerNotificationHandle:notificationHandle
@@ -480,17 +480,17 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
                              relationObject:relationObject];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                               always:(BOOL)always
                                       relationObject:(id)relationObject;{
-    return [[self shareManager] registerNotificationHandle:notificationHandle
-                                                      type:type
-                                                    always:always
-                                            relationObject:relationObject];
+    return [self _registerNotificationHandle:notificationHandle
+                                        type:type
+                                      always:always
+                              relationObject:relationObject];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
                                                         type:(NSInteger)type
                                               relationObject:(id)relationObject;{
     return [self registerNotificationHandleDelegate:delegate
@@ -499,44 +499,44 @@ NSString * const NMNotificationManagerDidReceiveNotification = @"NMNotificationM
                                      relationObject:relationObject];
 }
 
-+ (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
                                                         type:(NSInteger)type
                                                       always:(BOOL)always
                                               relationObject:relationObject;{
-    return [[self shareManager] registerNotificationHandleDelegate:delegate
-                                                              type:type
-                                                            always:always
-                                                    relationObject:(id)relationObject];
+    return [self _registerNotificationHandleDelegate:delegate
+                                                type:type
+                                              always:always
+                                      relationObject:(id)relationObject];
 }
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate;{
-    [[self shareManager] _removeNotificationHandlesDelegate:delegate];
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate;{
+    [self _removeNotificationHandlesDelegate:delegate];
 }
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
                                      type:(NSInteger)type;{
-    [[self shareManager] _removeNotificationHandlesDelegate:delegate
-                                                       type:type];
+    [self _removeNotificationHandlesDelegate:delegate
+                                        type:type];
 }
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
                                      type:(NSInteger)type
                                    always:(BOOL)always{
-    [[self shareManager] _removeNotificationHandlesDelegate:delegate type:type always:always];
+    [self _removeNotificationHandlesDelegate:delegate type:type always:always];
 }
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate
                                    always:(BOOL)always;{
-    [[self shareManager] _removeNotificationHandlesDelegate:delegate
-                                                     always:always];
+    [self _removeNotificationHandlesDelegate:delegate
+                                      always:always];
 }
 
-+ (void)removeNotificationHandlesWithType:(NSInteger)type;{
-    [[self shareManager] _removeNotificationHandlesWithType:type];
+- (void)removeNotificationHandlesWithType:(NSInteger)type;{
+    [self _removeNotificationHandlesWithType:type];
 }
 
-+ (void)removeNotificationContentsWithType:(NSInteger)type;{
-    [[self shareManager] _removeNotificationContentsWithType:type];
+- (void)removeNotificationContentsWithType:(NSInteger)type;{
+    [self _removeNotificationContentsWithType:type];
 }
 
 @end

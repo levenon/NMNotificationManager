@@ -72,37 +72,37 @@ extern NSString * const NMNotificationManagerDidReceiveNotification;
 
 + (id)shareManager;
 
-+ (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;
+- (void)handleNotification:(id<NMNotification>)notification backgroundFetch:(BOOL)backgroundFetch;
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                       relationObject:(id)relationObject;
 
-+ (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
+- (NMNotificationHandle *)registerNotificationHandle:(void(^)(NMNotificationManager *notificationManager, id<NMNotificationCustomContent> notificationContent))notificationHandle
                                                 type:(NSInteger)type
                                               always:(BOOL)always
                                       relationObject:(id)relationObject;
 
-+ (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
                                                         type:(NSInteger)type
                                               relationObject:(id)relationObject;
 
-+ (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
+- (NMNotificationHandle *)registerNotificationHandleDelegate:(id<NMNotificationHandleDelegate>)delegate
                                                         type:(NSInteger)type
                                                       always:(BOOL)always
                                               relationObject:(id)relationObject;
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate type:(NSInteger)type;
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate type:(NSInteger)type;
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate always:(BOOL)always;
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate always:(BOOL)always;
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate type:(NSInteger)type always:(BOOL)always;
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate type:(NSInteger)type always:(BOOL)always;
 
-+ (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate;
+- (void)removeNotificationHandlesDelegate:(id<NMNotificationHandleDelegate>)delegate;
 
-+ (void)removeNotificationHandlesWithType:(NSInteger)type;
+- (void)removeNotificationHandlesWithType:(NSInteger)type;
 
-+ (void)removeNotificationContentsWithType:(NSInteger)type;
+- (void)removeNotificationContentsWithType:(NSInteger)type;
 
 @end
 
